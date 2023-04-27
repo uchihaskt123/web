@@ -1,0 +1,24 @@
+{%- elsif option_type == 'color' %}
+                              <div class="grid-x">
+                                {%- assign color = '' -%}
+                                {%- assign shown_list = '' -%}
+                                {%- for variant in product.variants -%}
+                                  {%- assign option_handle = variant.options[option_index] -%}
+                                  {%- unless shown_list contains option_handle -%}
+                                    {%- capture color_code -%}
+                                        {%- include 'product-option-color-detector' -%}
+                                      {%- endcapture -%}
+                                      {%- assign color_code = color_code | strip | strip_newlines -%}
+                                      {%- if color_code != blank -%}
+                                        <label class="product-option-value-item product-option-color">
+                                          <input type="radio" name="option{{ option.position }}" {% if variant == current_variant %}checked="checked"{% endif %} value="{{ option_handle | escape }}" data-product-option="{{ option_index }}" />
+                                          <span class="display-block" style="background: {{ color_code }};"></span>
+                                        </label>
+                                      {%- endif -%}
+                                    {%- assign shown_list = shown_list | join: ',' -%}
+                                    {%- assign shown_list = shown_list | append: ',' | append: option_handle -%} 
+                                    {%- assign shown_list = shown_list | split: ',' -%}
+                                    {%- assign shown_list = shown_list | append: option_handle | append: ' ' -%}
+                                  {%- endunless -%}
+                                {%- endfor -%}
+                              </div>
